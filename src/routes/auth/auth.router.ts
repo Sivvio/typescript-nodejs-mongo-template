@@ -2,13 +2,11 @@ import {currentUser, validateRequest} from "../../lib";
 import {Request, Response} from "express";
 import {signupValidator} from "./validators/signup.validator";
 import {signinValidator} from "./validators/signin.validator";
-import {AuthService} from "./services/auth.service";
+import * as AuthService from "./services/auth.service";
 import jwt from "jsonwebtoken";
 import {UserDoc} from "../../schemas/user";
 
 const authRouter = require('express').Router();
-
-const authService = new AuthService();
 
 authRouter.get('/currentuser', currentUser, (req: Request, res: Response) => {
     res.send({currentUser: req.currentUser || null});
@@ -16,7 +14,7 @@ authRouter.get('/currentuser', currentUser, (req: Request, res: Response) => {
 
 authRouter.post('/signup', signupValidator, validateRequest, async (req: Request, res: Response) => {
     const {email, password} = req.body;
-    const user = await authService.signUp(email, password);
+    const user = await AuthService.signUp(email, password);
 
     res.setHeader("Authorization", `Bearer ${signJwt(user)}`);
 
@@ -26,7 +24,7 @@ authRouter.post('/signup', signupValidator, validateRequest, async (req: Request
 
 authRouter.post('/signin', signinValidator, validateRequest, async (req: Request, res: Response) => {
     const {email, password} = req.body;
-    const user = await authService.signIn(email, password);
+    const user = await AuthService.signIn(email, password);
 
     res.setHeader("Authorization", `Bearer ${signJwt(user)}`);
 

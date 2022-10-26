@@ -1,4 +1,4 @@
-import {authRouter} from "./auth/router";
+import {authRouter} from "./auth/auth.router";
 
 const apiRouter = require('express').Router();
 

@@ -2,7 +2,7 @@ import express from 'express';
 import 'express-async-errors';
 import {json} from 'body-parser';
 import {errorHandler, NotFoundError} from "./lib";
-import {apiRouter} from "./routes/apiRouter";
+import {apiRouter} from "./routes/api.router";
 
 const app = express();
 app.set('trust proxy', true);

@@ -2,35 +2,35 @@ import {User, UserDoc} from "../../../schemas/user";
 import {BadRequestError} from "../../../lib";
 import {Password} from "../../../services/password";
 
-export class AuthService {
-    async signIn(email: string, password: string): Promise<UserDoc> {
+async function signIn(email: string, password: string): Promise<UserDoc> {
 
-        const existingUser = await User.findOne({email});
+    const existingUser = await User.findOne({email});
 
-        if (!existingUser) {
-            throw new BadRequestError('Invalid credentials');
-        }
-
-        const passwordMatch = await Password.compare(existingUser.password, password);
-
-        if (!passwordMatch) {
-            throw new BadRequestError('Invalid credentials');
-        }
-
-        return existingUser;
+    if (!existingUser) {
+        throw new BadRequestError('Invalid credentials');
     }
 
-    async signUp(email: string, password: string): Promise<UserDoc> {
+    const passwordMatch = await Password.compare(existingUser.password, password);
 
-        const existingUser = await User.findOne({email});
-
-        if (existingUser) {
-            throw new BadRequestError('User already exists');
-        }
-
-        const user = User.build({email, password});
-        await user.save();
-
-        return user;
+    if (!passwordMatch) {
+        throw new BadRequestError('Invalid credentials');
     }
+
+    return existingUser;
 }
+
+async function signUp(email: string, password: string): Promise<UserDoc> {
+
+    const existingUser = await User.findOne({email});
+
+    if (existingUser) {
+        throw new BadRequestError('User already exists');
+    }
+
+    const user = User.build({email, password});
+    await user.save();
+
+    return user;
+}
+
+export {signUp, signIn};
